@@ -1,17 +1,16 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <form-designer></form-designer>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+  import FormDesigner from "./components/FormDesigner";
 
-export default {
+  export default {
   name: 'App',
   components: {
-    HelloWorld
+    FormDesigner,
   }
 }
 </script>
