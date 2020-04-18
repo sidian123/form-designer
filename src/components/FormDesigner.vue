@@ -91,7 +91,9 @@
                             {type:"tab",name:"标签页"}
                         ]
                     }
-                }
+                },
+                //单元格中的字段
+                cellFields:[],
             }
         },
         computed:{
@@ -119,9 +121,21 @@
                 event.dataTransfer.setData("text/json",JSON.stringify(item));
             },
             onCellDrop(event){
-                event.dataTransfer.dropEffect = "copy";
-                let data=event.dataTransfer.getData("text/json");
-                console.log(data);
+                //获取拖拽的字段
+                let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
+                //构建单元格中的字段
+                let cellField=this.buildCellField(fieldObj);
+                //记录
+                this.cellFields.push(cellField,this.getPos(event));
+            },
+            /**
+             * 根据字段对象, 构建单元格中的字段
+             * @param fieldObj 字段
+             * @param pos 坐标
+             * @return {object} 单元格中的字段对象
+             */
+            buildCellField(fieldObj,pos){
+                
             },
             /**
              * 填充单元格对象
@@ -132,10 +146,8 @@
                 //更新isSelected字段
                 let isSelected=false;
                 if(this.dragStart!=null && this.dragEnd!=null){//处于拖拽或选中状态
-                    if(
-                        utils.isBetween(this.dragStart.row,this.dragEnd.row,row) &&
-                        utils.isBetween(this.dragStart.column,this.dragEnd.column,column)
-                    ){//该单元格在拖拽范围内
+                    if(utils.isBetween(this.dragStart.row,this.dragEnd.row,row) &&
+                        utils.isBetween(this.dragStart.column,this.dragEnd.column,column)){//该单元格在拖拽范围内
                         isSelected=true;
                     }
                 }
@@ -158,11 +170,7 @@
             onCellMouseMove(event){
                 if(this.isDrag){//处于拖拽状态
                     //更新dragEnd状态
-                    let array=event.target.getAttribute("id").split(',');
-                    this.dragEnd={
-                        row:parseInt(array[0]),
-                        column:parseInt(array[1])
-                    };
+                    this.dragEnd=this.getPos(event);
                 }
             },
             /**
@@ -171,11 +179,7 @@
              */
             onCellMouseUp(event){
                 //更新dragEnd状态
-                let array=event.target.getAttribute("id").split(',');
-                this.dragEnd={
-                    row:parseInt(array[0]),
-                    column:parseInt(array[1])
-                };
+                this.dragEnd=this.getPos(event);
                 //退出拖拽状态
                 this.isDrag=false;
             },
@@ -185,12 +189,20 @@
              */
             onCellMouseDown(event){
                 this.isDrag=true;
-                let array=event.target.getAttribute("id").split(',');
-                this.dragStart={
-                    row:parseInt(array[0]),
-                    column:parseInt(array[1])
-                };
+                this.dragStart=this.getPos(event);
             },
+            /**
+             * 从event上获取坐标
+             * @param event
+             * @return {string[]}
+             */
+            getPos(event){
+                let t=event.target.getAttribute("id").split(',');
+                return {
+                    row:parseInt(t[0]),
+                    column:parseInt(t[1])
+                }
+            }
         }
     }
 </script>
