@@ -6,10 +6,10 @@
 
 <script>
     export default {
-        name: "Label",
+        name: "GLabel",
         props:{
             value:{
-                default:"name"
+                default:"Label"
             }
         }
     }

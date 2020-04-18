@@ -36,6 +36,10 @@
                          @drop.prevent="onCellDrop"
                          @dragover.prevent="onCellDragOver"
                     >
+                        <component
+                                v-if="item.field!=null"
+                                :is="'g-'+item.field.type"
+                        ></component>
                     </div>
                 </div>
                 <div class="cell-attributes-panel">
@@ -48,9 +52,12 @@
 
 <script>
     import utils from "../assets/utils";
+    import fieldsCom from "./filed";
+
 
     export default {
         name: "FormDesigner",
+        components:fieldsCom,
         data(){
             return{
                 /**
@@ -69,12 +76,12 @@
                     base:{
                         title:"基础字段",
                         list:[
-                            {type:"label",name:"标签"},
-                            {type:"input",name:"输入框"},
-                            {type:"inputNumber",name:"输入框"},
-                            {type:"radioGroup",name:"单选框组"},
-                            {type:"checkboxGroup",name:"多选框组"},
-                            {type:"dataTimePicker",name:"日期时间选择器"},
+                            {type:"Label",name:"标签"},
+                            {type:"Input",name:"输入框"},
+                            {type:"InputNumber",name:"输入框"},
+                            {type:"RadioGroup",name:"单选框组"},
+                            {type:"CheckboxGroup",name:"多选框组"},
+                            {type:"DataTimePicker",name:"日期时间选择器"},
                         ]
                     },
                     advanced:{
@@ -93,7 +100,7 @@
                     }
                 },
                 //单元格中的字段
-                cellFields:[],
+                cellFields:{},
             }
         },
         computed:{
@@ -126,7 +133,8 @@
                 //构建单元格中的字段
                 let cellField=this.buildCellField(fieldObj);
                 //记录
-                this.cellFields.push(cellField,this.getPos(event));
+                let pos = this.getPos(event);
+                this.$set(this.cellFields,`${pos.row},${pos.column}`,this.buildCellField(cellField,this.getPos(event)));
             },
             /**
              * 根据字段对象, 构建单元格中的字段
@@ -135,7 +143,10 @@
              * @return {object} 单元格中的字段对象
              */
             buildCellField(fieldObj,pos){
-                
+                switch (fieldObj.type) {
+                    case "Label":
+                        return {...fieldObj, pos}
+                }
             },
             /**
              * 填充单元格对象
@@ -151,9 +162,13 @@
                         isSelected=true;
                     }
                 }
+                //填充字段
+                let cellField = this.cellFields[`${row},${column}`];
                 //构建并返回对象
                 return {
-                    row,column,isSelected
+                    row,column,
+                    isSelected,
+                    field:cellField
                 }
             },
             /**
