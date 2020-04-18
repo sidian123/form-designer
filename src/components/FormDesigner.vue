@@ -1,31 +1,19 @@
 <template>
     <div class="form-designer">
         <div class="field-sidebar">
-            <div class="field-group">
-                <div class="field-group-title">基础字段</div>
+            <div class="field-group"
+                 v-for="(group,index) in fieldItems"
+                 :key="index"
+            >
+                <div class="field-group-title">{{group.title}}</div>
                 <div class="field-group-content">
-                    <div class="field-item" draggable="true">单行文本</div>
-                    <div class="field-item" draggable="true">多行文本</div>
-                    <div class="field-item" draggable="true">计数器</div>
-                    <div class="field-item" draggable="true">单选框组</div>
-                    <div class="field-item" draggable="true">多选框组</div>
-                    <div class="field-item" draggable="true">时间选择器</div>
-                    <div class="field-item" draggable="true">日期选择器</div>
-                    <div class="field-item" draggable="true">文本</div>
-                </div>
-            </div>
-            <div class="field-group">
-                <div class="field-group-title">高级字段</div>
-                <div class="field-group-content">
-                    <div class="field-item">自定义区域</div>
-                    <div class="field-item">文件</div>
-                </div>
-            </div>
-            <div class="field-group">
-                <div class="field-group-title">布局字段</div>
-                <div class="field-group-content">
-                    <div class="field-item">分割线</div>
-                    <div class="field-item">标签页</div>
+                    <div class="field-item"
+                         draggable="true"
+                         v-for="(item,index) in group.list"
+                         :key="index"
+                    >
+                        {{item.name}}
+                    </div>
                 </div>
             </div>
         </div>
@@ -74,7 +62,34 @@
                 dragStart:null,
                 dragEnd:null,
                 isDrag:false,
-                editorCells:[],
+                //所有的可用字段
+                fieldItems:{
+                    base:{
+                        title:"基础字段",
+                        list:[
+                            {type:"label",name:"标签"},
+                            {type:"input",name:"输入框"},
+                            {type:"inputNumber",name:"输入框"},
+                            {type:"radioGroup",name:"单选框组"},
+                            {type:"checkboxGroup",name:"多选框组"},
+                            {type:"dataTimePicker",name:"日期时间选择器"},
+                        ]
+                    },
+                    advanced:{
+                        title:"高级字段",
+                        list:[
+                            {type:"custom",name:"自定义区域"},
+                            {type:"file",name:"文件"}
+                        ]
+                    },
+                    layout:{
+                        title:"布局字段",
+                        list:[
+                            {type:"line",name:"分割线"},
+                            {type:"tab",name:"标签页"}
+                        ]
+                    }
+                }
             }
         },
         computed:{
@@ -83,31 +98,18 @@
                     gridTemplateColumns:`repeat(${this.columnNum},minmax(200px,1fr))`
                 }
             },
-        },
-        created() {
-            this.refreshEditorCells();
-        },
-        watch:{
-            dragStart(){
-                this.refreshEditorCells();
-            },
-            dragEnd(){
-                this.refreshEditorCells();
-            }
-        },
-        methods:{
-            /**
-             * 刷新编辑器
-             */
-            refreshEditorCells(){
+            //表格编辑器的单元格
+            editorCells(){
                 let cells=[];
                 for(let i=0;i<this.rowNum;i++){//对于每一行
                     for(let j=0;j<this.columnNum;j++){//对于行中这一列
                         cells.push(this.fillCell(i,j));
                     }
                 }
-                this.editorCells=cells;
-            },
+                return cells;
+            }
+        },
+        methods:{
             /**
              * 填充单元格对象
              * @param row 行号
