@@ -11,6 +11,7 @@
                          draggable="true"
                          v-for="(item,index) in group.list"
                          :key="index"
+                         @dragstart="onFieldDragStart(item,$event)"
                     >
                         {{item.name}}
                     </div>
@@ -32,8 +33,9 @@
                          @mousedown="onCellMouseDown"
                          @mousemove="onCellMouseMove"
                          @mouseup="onCellMouseUp"
+                         @drop.prevent="onCellDrop"
+                         @dragover.prevent="onCellDragOver"
                     >
-                        {{`${item.row},${item.column}`}}
                     </div>
                 </div>
                 <div class="cell-attributes-panel">
@@ -110,6 +112,17 @@
             }
         },
         methods:{
+            onCellDragOver(event){
+                event.dataTransfer.dropEffect = "copy";
+            },
+            onFieldDragStart(item,event){
+                event.dataTransfer.setData("text/json",JSON.stringify(item));
+            },
+            onCellDrop(event){
+                event.dataTransfer.dropEffect = "copy";
+                let data=event.dataTransfer.getData("text/json");
+                console.log(data);
+            },
             /**
              * 填充单元格对象
              * @param row 行号
@@ -118,7 +131,7 @@
             fillCell(row,column){
                 //更新isSelected字段
                 let isSelected=false;
-                if(this.dragEnd!=null){//处于拖拽或选中状态
+                if(this.dragStart!=null && this.dragEnd!=null){//处于拖拽或选中状态
                     if(
                         utils.isBetween(this.dragStart.row,this.dragEnd.row,row) &&
                         utils.isBetween(this.dragStart.column,this.dragEnd.column,column)
