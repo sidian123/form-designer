@@ -15,4 +15,13 @@ export default {
         //判断
         return x>=start && x<=end;
     },
+    /**
+     * 在方形内. 方形由start,end确定
+     * @param start
+     * @param end
+     * @param pos ({row,column})
+     */
+    inRect(start,end,pos){
+        return this.isBetween(start.row,end.row,pos.row) && this.isBetween(start.column,end.column,pos.column);
+    }
 }

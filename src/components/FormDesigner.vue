@@ -30,10 +30,10 @@
                          v-for="(item,index) in editorCells"
                          :key="index"
                          :id="`${item.row},${item.column}`"
-                         @mousedown="onCellMouseDown"
-                         @mousemove="onCellMouseMove"
-                         @mouseup="onCellMouseUp"
-                         @drop.prevent="onCellDrop"
+                         @mousedown="onCellMouseDown(item)"
+                         @mousemove="onCellMouseMove(item)"
+                         @mouseup="onCellMouseUp(item)"
+                         @drop.prevent="onCellDrop(item,$event)"
                          @dragover.prevent="onCellDragOver"
                     >
                         <component
@@ -44,6 +44,10 @@
                 </div>
                 <div class="cell-attributes-panel">
                     <div class="panel-title">字段属性</div>
+                    <component
+                            v-if="selectedCells.length>0 && selectedCells[0].field!=null"
+                            :is="'g-'+selectedCells[0].field.type+'-attrs'"
+                    ></component>
                 </div>
             </div>
         </div>
@@ -76,12 +80,12 @@
                     base:{
                         title:"基础字段",
                         list:[
-                            {type:"Label",name:"标签"},
-                            {type:"Input",name:"输入框"},
-                            {type:"InputNumber",name:"输入框"},
-                            {type:"RadioGroup",name:"单选框组"},
-                            {type:"CheckboxGroup",name:"多选框组"},
-                            {type:"DataTimePicker",name:"日期时间选择器"},
+                            {type:"label",name:"标签"},
+                            {type:"input",name:"输入框"},
+                            {type:"inputNumber",name:"输入框"},
+                            {type:"radioGroup",name:"单选框组"},
+                            {type:"checkboxGroup",name:"多选框组"},
+                            {type:"dataTimePicker",name:"日期时间选择器"},
                         ]
                     },
                     advanced:{
@@ -109,7 +113,9 @@
                     gridTemplateColumns:`repeat(${this.columnNum},minmax(200px,1fr))`
                 }
             },
-            //表格编辑器的单元格
+            /**
+             * 表格编辑器的单元格
+             */
             editorCells(){
                 let cells=[];
                 for(let i=0;i<this.rowNum;i++){//对于每一行
@@ -118,6 +124,12 @@
                     }
                 }
                 return cells;
+            },
+            /**
+             * 被选中的单元格
+             */
+            selectedCells(){
+                return this.editorCells.filter(cell=> cell.isSelected)
             }
         },
         methods:{
@@ -127,14 +139,14 @@
             onFieldDragStart(item,event){
                 event.dataTransfer.setData("text/json",JSON.stringify(item));
             },
-            onCellDrop(event){
+            onCellDrop(item,event){
                 //获取拖拽的字段
                 let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
                 //构建单元格中的字段
                 let cellField=this.buildCellField(fieldObj);
                 //记录
-                let pos = this.getPos(event);
-                this.$set(this.cellFields,`${pos.row},${pos.column}`,this.buildCellField(cellField,this.getPos(event)));
+                let pos = {row:item.row,column:item.column};
+                this.$set(this.cellFields,`${pos.row},${pos.column}`,this.buildCellField(cellField,pos));
             },
             /**
              * 根据字段对象, 构建单元格中的字段
@@ -144,7 +156,7 @@
              */
             buildCellField(fieldObj,pos){
                 switch (fieldObj.type) {
-                    case "Label":
+                    case "label":
                         return {...fieldObj, pos}
                 }
             },
@@ -157,8 +169,7 @@
                 //更新isSelected字段
                 let isSelected=false;
                 if(this.dragStart!=null && this.dragEnd!=null){//处于拖拽或选中状态
-                    if(utils.isBetween(this.dragStart.row,this.dragEnd.row,row) &&
-                        utils.isBetween(this.dragStart.column,this.dragEnd.column,column)){//该单元格在拖拽范围内
+                    if(utils.inRect(this.dragStart,this.dragEnd,{row,column})){//该单元格在拖拽范围内
                         isSelected=true;
                     }
                 }
@@ -180,44 +191,32 @@
             },
             /**
              * 开始拖拽
-             * @param event
+             * @param item
              */
-            onCellMouseMove(event){
+            onCellMouseMove(item){
                 if(this.isDrag){//处于拖拽状态
                     //更新dragEnd状态
-                    this.dragEnd=this.getPos(event);
+                    this.dragEnd={row:item.row,column:item.column};
                 }
             },
             /**
              * 拖拽中
-             * @param event
+             * @param item
              */
-            onCellMouseUp(event){
+            onCellMouseUp(item){
                 //更新dragEnd状态
-                this.dragEnd=this.getPos(event);
+                this.dragEnd={row:item.row,column:item.column};
                 //退出拖拽状态
                 this.isDrag=false;
             },
             /**
              * 拖拽中
-             * @param event
+             * @param item
              */
-            onCellMouseDown(event){
+            onCellMouseDown(item){
                 this.isDrag=true;
-                this.dragStart=this.getPos(event);
+                this.dragStart={row:item.row,column:item.column};
             },
-            /**
-             * 从event上获取坐标
-             * @param event
-             * @return {string[]}
-             */
-            getPos(event){
-                let t=event.target.getAttribute("id").split(',');
-                return {
-                    row:parseInt(t[0]),
-                    column:parseInt(t[1])
-                }
-            }
         }
     }
 </script>
