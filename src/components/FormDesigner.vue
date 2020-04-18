@@ -4,14 +4,14 @@
             <div class="field-group">
                 <div class="field-group-title">基础字段</div>
                 <div class="field-group-content">
-                    <div class="field-item">单行文本</div>
-                    <div class="field-item">多行文本</div>
-                    <div class="field-item">计数器</div>
-                    <div class="field-item">单选框组</div>
-                    <div class="field-item">多选框组</div>
-                    <div class="field-item">时间选择器</div>
-                    <div class="field-item">日期选择器</div>
-                    <div class="field-item">文本</div>
+                    <div class="field-item" draggable="true">单行文本</div>
+                    <div class="field-item" draggable="true">多行文本</div>
+                    <div class="field-item" draggable="true">计数器</div>
+                    <div class="field-item" draggable="true">单选框组</div>
+                    <div class="field-item" draggable="true">多选框组</div>
+                    <div class="field-item" draggable="true">时间选择器</div>
+                    <div class="field-item" draggable="true">日期选择器</div>
+                    <div class="field-item" draggable="true">文本</div>
                 </div>
             </div>
             <div class="field-group">
@@ -30,18 +30,26 @@
             </div>
         </div>
         <div class="designer-body">
-            <div class="tool-bar">我是工具栏</div>
+            <div class="tool-bar">
+                <el-input-number v-model="rowNum"></el-input-number>
+                <el-input-number v-model="columnNum"></el-input-number>
+            </div>
             <div class="form-editor">
-                <div class="cell"
-                     :class="{isSelected:item.isSelected}"
-                     v-for="(item,index) in editorCells"
-                     :key="index"
-                     :id="`${item.row},${item.column}`"
-                     @mousedown="onCellMouseDown"
-                     @mousemove="onCellMouseMove"
-                     @mouseup="onCellMouseUp"
-                >
-                    {{`${item.row},${item.column}`}}
+                <div class="cell-container" :style="cellContainerStyle">
+                    <div class="cell"
+                         :class="{isSelected:item.isSelected}"
+                         v-for="(item,index) in editorCells"
+                         :key="index"
+                         :id="`${item.row},${item.column}`"
+                         @mousedown="onCellMouseDown"
+                         @mousemove="onCellMouseMove"
+                         @mouseup="onCellMouseUp"
+                    >
+                        {{`${item.row},${item.column}`}}
+                    </div>
+                </div>
+                <div class="cell-attributes-panel">
+                    <div class="panel-title">字段属性</div>
                 </div>
             </div>
         </div>
@@ -49,6 +57,8 @@
 </template>
 
 <script>
+    import utils from "../assets/utils";
+
     export default {
         name: "FormDesigner",
         data(){
@@ -56,7 +66,7 @@
                 /**
                  * 表单的列数
                  */
-                columnNum:4,
+                columnNum:2,
                 /**
                  * 表单的行数
                  */
@@ -66,6 +76,13 @@
                 isDrag:false,
                 editorCells:[],
             }
+        },
+        computed:{
+            cellContainerStyle(){
+                return {
+                    gridTemplateColumns:`repeat(${this.columnNum},minmax(200px,1fr))`
+                }
+            },
         },
         created() {
             this.refreshEditorCells();
@@ -100,12 +117,14 @@
                 //更新isSelected字段
                 let isSelected=false;
                 if(this.dragEnd!=null){//处于拖拽或选中状态
-                    if(row>=this.dragStart.row && row<=this.dragEnd.row &&
-                        column>=this.dragStart.column && column<=this.dragEnd.column){//该单元格在拖拽范围内
+                    if(
+                        utils.isBetween(this.dragStart.row,this.dragEnd.row,row) &&
+                        utils.isBetween(this.dragStart.column,this.dragEnd.column,column)
+                    ){//该单元格在拖拽范围内
                         isSelected=true;
                     }
                 }
-
+                //构建并返回对象
                 return {
                     row,column,isSelected
                 }
@@ -129,7 +148,6 @@
                         row:parseInt(array[0]),
                         column:parseInt(array[1])
                     };
-                    console.log(event.target.getAttribute("id"));
                 }
             },
             /**
@@ -157,12 +175,16 @@
                     row:parseInt(array[0]),
                     column:parseInt(array[1])
                 };
-                console.log(event.target.getAttribute("id"));
             },
         }
     }
 </script>
 
+<style lang="scss">
+    .el-input{
+        width: initial;
+    }
+</style>
 <style lang="scss" scoped>
     .form-designer{
         display: flex;
@@ -201,24 +223,38 @@
         .designer-body{
             flex-grow: 1;
             padding: 1rem 0.5rem;
+            display: flex;
+            flex-direction: column;
             .tool-bar{
                 border-bottom: solid 1px gray;
-                margin-bottom: 1rem;
             }
             .form-editor{
-                display: grid;
-                grid-template-columns:repeat(4,minmax(200px,1fr));
                 user-select: none;
-
-                .cell{
-                    line-height: 2rem;
-                    border:dashed 1px gray;
-                    &:hover{
-                        background-color: #c8c8c8;
-                        color: white;
+                display: flex;
+                flex-grow: 1;
+                .cell-container{
+                    flex: 1;
+                    display: grid;
+                    grid-auto-rows: 2rem;
+                    padding:1rem;
+                    .cell{
+                        border:dashed 1px gray;
+                        &:hover{
+                            background-color: #c8c8c8;
+                            color: white;
+                        }
+                        &.isSelected{
+                            background-color: #76ff78;
+                        }
                     }
-                    &.isSelected{
-                        background-color: #76ff78;
+                }
+                .cell-attributes-panel{
+                    flex-shrink: 0;
+                    flex-basis: 250px;
+                    border-left: solid 1px gray;
+                    .panel-title{
+                        border-bottom: solid 1px gray;
+                        padding:0.5rem 0.5rem;
                     }
                 }
             }
