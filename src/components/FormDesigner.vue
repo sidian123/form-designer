@@ -82,7 +82,7 @@
                 /**
                  * 表单的列数
                  */
-                columnNum:2,
+                columnNum:4,
                 /**
                  * 表单的行数
                  */
@@ -303,12 +303,13 @@
                     .cell{
                         display: flex;
                         align-items: center;
+                        padding: 0 0.5rem;
                         &:hover{
                             background-color: #c8c8c8;
                             color: white;
                         }
                         &.isSelected{
-                            background-color: #76ff78;
+                            background-color: #cbffcb;
                         }
                     }
                     .show-grid{
