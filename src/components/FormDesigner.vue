@@ -168,7 +168,7 @@
                 //构建单元格中的字段
                 let cellField=buildCellField(fieldObj,pos);
                 //记录
-                let index = this.cellFields.findIndex(item=>this.posEqual(item,pos));
+                let index = this.cellFields.findIndex(item=>this.posEqual(item.pos,pos));
                 if(index!==-1){//已存在
                     //更新
                     this.cellFields.splice(index,1,cellField);
