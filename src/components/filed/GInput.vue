@@ -1,5 +1,5 @@
 <template>
-    <el-input size="mini"></el-input>
+    <el-input size="mini" :type="field.inputType"></el-input>
 </template>
 
 <script>
