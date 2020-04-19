@@ -23,6 +23,7 @@
                 行<el-input-number size="mini" :min="0" v-model="rowNum"></el-input-number>
                 列<el-input-number size="mini" :min="0" v-model="columnNum"></el-input-number>
                 <el-button size="mini" @click="switchGridLine">显/隐网格</el-button>
+                <el-button size="mini" @click="mergeCells" :disabled="!canMergeCells">单元格合并</el-button>
             </div>
             <div class="form-editor">
                 <div class="cell-container">
@@ -32,6 +33,7 @@
                     >
                         <div class="cell"
                              :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
+                             :style="{width:(item.width/columnNum)*100+'%'}"
                              v-for="(item,index) in row"
                              :key="index"
                              :id="`${item.row},${item.column}`"
@@ -63,7 +65,6 @@
 </template>
 
 <script>
-    import utils from "../assets/utils";
     import fieldsCom, {
         buildCellField,
         checkboxGroupField,
@@ -77,21 +78,18 @@
         radioGroupField,
         tabField
     } from "./filed";
+    import RenderEditorCells from "./mixins/RenderEditorCells";
+    import MergeCells from "./mixins/MergeCells";
+    import Common from "./mixins/Common";
+    import SelectCells from "./mixins/SelectCells";
 
 
     export default {
         name: "FormDesigner",
+        mixins:[RenderEditorCells,MergeCells,Common,SelectCells],
         components:fieldsCom,
         data(){
             return{
-                /**
-                 * 表单的列数
-                 */
-                columnNum:4,
-                /**
-                 * 表单的行数
-                 */
-                rowNum:5,
                 isShowGrid:true,
                 dragStart:null,
                 dragEnd:null,
@@ -130,20 +128,6 @@
         },
         computed:{
             /**
-             * 表格编辑器的单元格,二维数组格式
-             */
-            editorCells(){
-                let cells=[];
-                for(let i=0;i<this.rowNum;i++){//对于每一行
-                    let rowCells=[];
-                    for(let j=0;j<this.columnNum;j++){//对于行中这一列
-                        rowCells.push(this.fillCell(i,j));
-                    }
-                    cells.push(rowCells);
-                }
-                return cells;
-            },
-            /**
              * 被选中的单元格
              */
             selectedCells(){
@@ -181,38 +165,6 @@
                     //新增
                     this.cellFields.push(cellField);
                 }
-            },
-            posEqual(pos1,pos2){
-                return pos1.row===pos2.row && pos1.column===pos2.column;
-            },
-            /**
-             * 填充单元格对象
-             * @param row 行号
-             * @param column 列号
-             */
-            fillCell(row,column){
-                //更新isSelected字段
-                let isSelected=false;
-                if(this.dragStart!=null && this.dragEnd!=null){//处于拖拽或选中状态
-                    if(utils.inRect(this.dragStart,this.dragEnd,{row,column})){//该单元格在拖拽范围内
-                        isSelected=true;
-                    }
-                }
-                //填充字段
-                let cellField = this.cellFields.find(item=>this.posEqual(item.pos,{row,column}));
-                //构建并返回对象
-                return {
-                    row,column,
-                    isSelected,
-                    field:cellField
-                }
-            },
-            /**
-             * 清空拖拽状态
-             */
-            initDragStatus(){
-                this.dragStart=null;
-                this.dragEnd=null;
             },
             /**
              * 开始拖拽
@@ -306,7 +258,6 @@
                     .cell-row{
                         display: flex;
                         .cell{
-                            flex-basis: 25%;
                             min-height: 2rem;
                             display: flex;
                             align-items: center;
