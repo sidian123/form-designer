@@ -316,7 +316,7 @@
                                 color: white;
                             }
                             &.isSelected{
-                                background-color: #cbffcb;
+                                background-color: #eff9ef;
                             }
                         }
                     }
