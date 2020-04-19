@@ -1,9 +1,13 @@
 import GLabel from "./GLabel";
 import GLabelAttrs from "./GLabelAttrs";
+import GInput from "./GInput";
+import GInputAttrs from "./GInputAttrs";
 
 export default {
     [GLabel.name]:GLabel,
-    [GLabelAttrs.name]:GLabelAttrs
+    [GLabelAttrs.name]:GLabelAttrs,
+    [GInput.name]:GInput,
+    [GInputAttrs.name]:GInputAttrs
 }
 
 const labelField={type:"label",name:"标签",value:"label"};
@@ -17,6 +21,22 @@ const fileField={type:"file",name:"文件"};
 const lineField={type:"line",name:"分割线"};
 const tabField={type:"tab",name:"标签页"};
 
+/**
+ * 根据字段对象, 构建单元格中的字段
+ * @param fieldObj 字段
+ * @param pos 坐标
+ * @return {object} 单元格中的字段对象
+ */
+function buildCellField(fieldObj,pos){
+    switch (fieldObj.type) {
+        case "label":
+        case "input":
+            return {...fieldObj, pos};
+        default:
+            return {pos};
+    }
+}
+
 export {
     labelField,
     inputField,
@@ -27,5 +47,6 @@ export {
     customField,
     fileField,
     lineField,
-    tabField
+    tabField,
+    buildCellField
 }

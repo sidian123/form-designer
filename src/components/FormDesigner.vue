@@ -20,13 +20,14 @@
         </div>
         <div class="designer-body">
             <div class="tool-bar">
-                <el-input-number v-model="rowNum"></el-input-number>
-                <el-input-number v-model="columnNum"></el-input-number>
+                行<el-input-number size="mini" :min="0" v-model="rowNum"></el-input-number>
+                列<el-input-number size="mini" :min="0" v-model="columnNum"></el-input-number>
+                <el-button size="mini" @click="switchGridLine">显/隐网格</el-button>
             </div>
             <div class="form-editor">
                 <div class="cell-container" :style="cellContainerStyle">
                     <div class="cell"
-                         :class="{isSelected:item.isSelected}"
+                         :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
                          v-for="(item,index) in editorCells"
                          :key="index"
                          :id="`${item.row},${item.column}`"
@@ -59,6 +60,7 @@
 <script>
     import utils from "../assets/utils";
     import fieldsCom, {
+        buildCellField,
         checkboxGroupField,
         customField,
         dateTimePickerField,
@@ -85,6 +87,7 @@
                  * 表单的行数
                  */
                 rowNum:5,
+                isShowGrid:true,
                 dragStart:null,
                 dragEnd:null,
                 isDrag:false,
@@ -149,6 +152,9 @@
             }
         },
         methods:{
+            switchGridLine(){
+                this.isShowGrid=!this.isShowGrid;
+            },
             onCellDragOver(event){
                 event.dataTransfer.dropEffect = "copy";
             },
@@ -160,7 +166,7 @@
                 //获取拖拽的字段
                 let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
                 //构建单元格中的字段
-                let cellField=this.buildCellField(fieldObj,pos);
+                let cellField=buildCellField(fieldObj,pos);
                 //记录
                 let index = this.cellFields.findIndex(item=>this.posEqual(item,pos));
                 if(index!==-1){//已存在
@@ -173,18 +179,6 @@
             },
             posEqual(pos1,pos2){
                 return pos1.row===pos2.row && pos1.column===pos2.column;
-            },
-            /**
-             * 根据字段对象, 构建单元格中的字段
-             * @param fieldObj 字段
-             * @param pos 坐标
-             * @return {object} 单元格中的字段对象
-             */
-            buildCellField(fieldObj,pos){
-                switch (fieldObj.type) {
-                    case "label":
-                        return {...fieldObj, pos}
-                }
             },
             /**
              * 填充单元格对象
@@ -307,7 +301,6 @@
                     grid-auto-rows: 2rem;
                     padding:1rem;
                     .cell{
-                        border:dashed 1px gray;
                         display: flex;
                         align-items: center;
                         &:hover{
@@ -317,6 +310,9 @@
                         &.isSelected{
                             background-color: #76ff78;
                         }
+                    }
+                    .show-grid{
+                        border:dashed 1px gray;
                     }
                 }
                 .cell-attributes-panel{
