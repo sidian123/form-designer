@@ -2,15 +2,15 @@
     <div class="label-attrs">
         <div class="attr-item">
             <div class="attr-key">行</div>
-            <div class="attr-value"><el-input-number v-model="field.pos.row"></el-input-number></div>
+            <div class="attr-value"><el-input-number size="mini" v-model="field.pos.row"></el-input-number></div>
         </div>
         <div class="attr-item">
             <div class="attr-key">列</div>
-            <div class="attr-value"><el-input-number v-model="field.pos.column"></el-input-number></div>
+            <div class="attr-value"><el-input-number size="mini" v-model="field.pos.column"></el-input-number></div>
         </div>
         <div class="attr-item">
             <div class="attr-key">值</div>
-            <div class="attr-value"><el-input v-model="field.value"></el-input></div>
+            <div class="attr-value"><el-input size="mini" v-model="field.value"></el-input></div>
         </div>
     </div>
 </template>

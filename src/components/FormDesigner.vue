@@ -58,7 +58,18 @@
 
 <script>
     import utils from "../assets/utils";
-    import fieldsCom from "./filed";
+    import fieldsCom, {
+        checkboxGroupField,
+        customField,
+        dateTimePickerField,
+        fileField,
+        inputField,
+        inputNumberFiled,
+        labelField,
+        lineField,
+        radioGroupField,
+        tabField
+    } from "./filed";
 
 
     export default {
@@ -82,26 +93,26 @@
                     base:{
                         title:"基础字段",
                         list:[
-                            {type:"label",name:"标签",value:"label"},
-                            {type:"input",name:"输入框"},
-                            {type:"inputNumber",name:"输入框"},
-                            {type:"radioGroup",name:"单选框组"},
-                            {type:"checkboxGroup",name:"多选框组"},
-                            {type:"dataTimePicker",name:"日期时间选择器"},
+                            labelField,
+                            inputField,
+                            inputNumberFiled,
+                            radioGroupField,
+                            checkboxGroupField,
+                            dateTimePickerField,
                         ]
                     },
                     advanced:{
                         title:"高级字段",
                         list:[
-                            {type:"custom",name:"自定义区域"},
-                            {type:"file",name:"文件"}
+                            customField,
+                            fileField
                         ]
                     },
                     layout:{
                         title:"布局字段",
                         list:[
-                            {type:"line",name:"分割线"},
-                            {type:"tab",name:"标签页"}
+                            lineField,
+                            tabField
                         ]
                     }
                 },
@@ -242,6 +253,8 @@
     }
 </style>
 <style lang="scss" scoped>
+    @import "../assets/utils";
+
     .form-designer{
         display: flex;
         width: 100%;
@@ -295,6 +308,8 @@
                     padding:1rem;
                     .cell{
                         border:dashed 1px gray;
+                        display: flex;
+                        align-items: center;
                         &:hover{
                             background-color: #c8c8c8;
                             color: white;
