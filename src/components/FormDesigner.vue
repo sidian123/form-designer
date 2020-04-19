@@ -39,6 +39,7 @@
                         <component
                                 v-if="item.field!=null"
                                 :is="'g-'+item.field.type"
+                                :field="item.field"
                         ></component>
                     </div>
                 </div>
@@ -47,6 +48,7 @@
                     <component
                             v-if="selectedCells.length>0 && selectedCells[0].field!=null"
                             :is="'g-'+selectedCells[0].field.type+'-attrs'"
+                            :field.sync="selectedCells[0].field"
                     ></component>
                 </div>
             </div>
@@ -80,7 +82,7 @@
                     base:{
                         title:"基础字段",
                         list:[
-                            {type:"label",name:"标签"},
+                            {type:"label",name:"标签",value:"label"},
                             {type:"input",name:"输入框"},
                             {type:"inputNumber",name:"输入框"},
                             {type:"radioGroup",name:"单选框组"},
@@ -104,10 +106,13 @@
                     }
                 },
                 //单元格中的字段
-                cellFields:{},
+                cellFields:[],
             }
         },
         computed:{
+            /**
+             * 编辑器样式
+             */
             cellContainerStyle(){
                 return {
                     gridTemplateColumns:`repeat(${this.columnNum},minmax(200px,1fr))`
@@ -140,13 +145,23 @@
                 event.dataTransfer.setData("text/json",JSON.stringify(item));
             },
             onCellDrop(item,event){
+                let pos = {row:item.row,column:item.column};
                 //获取拖拽的字段
                 let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
                 //构建单元格中的字段
-                let cellField=this.buildCellField(fieldObj);
+                let cellField=this.buildCellField(fieldObj,pos);
                 //记录
-                let pos = {row:item.row,column:item.column};
-                this.$set(this.cellFields,`${pos.row},${pos.column}`,this.buildCellField(cellField,pos));
+                let index = this.cellFields.findIndex(item=>this.posEqual(item,pos));
+                if(index!==-1){//已存在
+                    //更新
+                    this.cellFields.splice(index,1,cellField);
+                }else{//不存在
+                    //新增
+                    this.cellFields.push(cellField);
+                }
+            },
+            posEqual(pos1,pos2){
+                return pos1.row===pos2.row && pos1.column===pos2.column;
             },
             /**
              * 根据字段对象, 构建单元格中的字段
@@ -174,7 +189,7 @@
                     }
                 }
                 //填充字段
-                let cellField = this.cellFields[`${row},${column}`];
+                let cellField = this.cellFields.find(item=>this.posEqual(item.pos,{row,column}));
                 //构建并返回对象
                 return {
                     row,column,

@@ -1,17 +1,13 @@
 <template>
     <div class="label">
-        {{value}}
+        {{field.value}}
     </div>
 </template>
 
 <script>
     export default {
         name: "GLabel",
-        props:{
-            value:{
-                default:"Label"
-            }
-        }
+        props:["field"],
     }
 </script>
 
