@@ -25,23 +25,28 @@
                 <el-button size="mini" @click="switchGridLine">显/隐网格</el-button>
             </div>
             <div class="form-editor">
-                <div class="cell-container" :style="cellContainerStyle">
-                    <div class="cell"
-                         :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
-                         v-for="(item,index) in editorCells"
+                <div class="cell-container">
+                    <div class="cell-row"
+                         v-for="(row,index) in editorCells"
                          :key="index"
-                         :id="`${item.row},${item.column}`"
-                         @mousedown="onCellMouseDown(item)"
-                         @mousemove="onCellMouseMove(item)"
-                         @mouseup="onCellMouseUp(item)"
-                         @drop.prevent="onCellDrop(item,$event)"
-                         @dragover.prevent="onCellDragOver"
                     >
-                        <component
-                                v-if="item.field!=null"
-                                :is="'g-'+item.field.type"
-                                :field="item.field"
-                        ></component>
+                        <div class="cell"
+                             :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
+                             v-for="(item,index) in row"
+                             :key="index"
+                             :id="`${item.row},${item.column}`"
+                             @mousedown="onCellMouseDown(item)"
+                             @mousemove="onCellMouseMove(item)"
+                             @mouseup="onCellMouseUp(item)"
+                             @drop.prevent="onCellDrop(item,$event)"
+                             @dragover.prevent="onCellDragOver"
+                        >
+                            <component
+                                    v-if="item.field!=null"
+                                    :is="'g-'+item.field.type"
+                                    :field="item.field"
+                            ></component>
+                        </div>
                     </div>
                 </div>
                 <div class="cell-attributes-panel">
@@ -125,22 +130,16 @@
         },
         computed:{
             /**
-             * 编辑器样式
-             */
-            cellContainerStyle(){
-                return {
-                    gridTemplateColumns:`repeat(${this.columnNum},minmax(200px,1fr))`
-                }
-            },
-            /**
-             * 表格编辑器的单元格
+             * 表格编辑器的单元格,二维数组格式
              */
             editorCells(){
                 let cells=[];
                 for(let i=0;i<this.rowNum;i++){//对于每一行
+                    let rowCells=[];
                     for(let j=0;j<this.columnNum;j++){//对于行中这一列
-                        cells.push(this.fillCell(i,j));
+                        rowCells.push(this.fillCell(i,j));
                     }
+                    cells.push(rowCells);
                 }
                 return cells;
             },
@@ -148,7 +147,13 @@
              * 被选中的单元格
              */
             selectedCells(){
-                return this.editorCells.filter(cell=> cell.isSelected)
+                let cells=[];
+                this.editorCells.forEach(rowCells=>rowCells.forEach(cell=>{
+                    if(cell.isSelected){
+                        cells.push(cell)
+                    }
+                }));
+                return cells;
             }
         },
         methods:{
@@ -296,20 +301,23 @@
                 display: flex;
                 flex-grow: 1;
                 .cell-container{
-                    flex: 1;
-                    display: grid;
-                    grid-auto-rows: 2rem;
+                    flex-grow: 1;
                     padding:1rem;
-                    .cell{
+                    .cell-row{
                         display: flex;
-                        align-items: center;
-                        padding: 0 0.5rem;
-                        &:hover{
-                            background-color: #c8c8c8;
-                            color: white;
-                        }
-                        &.isSelected{
-                            background-color: #cbffcb;
+                        .cell{
+                            flex-basis: 25%;
+                            min-height: 2rem;
+                            display: flex;
+                            align-items: center;
+                            padding: 0 0.5rem;
+                            &:hover{
+                                background-color: #c8c8c8;
+                                color: white;
+                            }
+                            &.isSelected{
+                                background-color: #cbffcb;
+                            }
                         }
                     }
                     .show-grid{
