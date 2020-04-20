@@ -1,5 +1,8 @@
 <template>
-    <el-input size="mini" :type="field.inputType"></el-input>
+    <el-input size="mini"
+              :type="field.inputType"
+              placeholder="请输入内容"
+    ></el-input>
 </template>
 
 <script>
