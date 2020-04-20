@@ -15,7 +15,7 @@
                     <td v-for="(cell,index) in row"
                         :key="index"
                         class="cell"
-                        :class="{isSelected:inRect(cell)}"
+                        :class="{isSelected:isSelected(cell)}"
                         :colspan="cell.width"
                         :rowspan="cell.height"
                         @mousedown="onCellMouseDown(cell)"
@@ -37,6 +37,10 @@
         name: "GTable",
         mixins:[SelectCells],
         props:['field'],
+        created() {
+            //初始化所有单元格
+            this.init();
+        },
         computed:{
             /**
              * 仅用于遍历的数据
@@ -44,13 +48,57 @@
              */
             columnArrayForIterate(){
                 return utils.fillArray(this.field.column,1);
-            }
+            },
         },
-        created() {
-            //初始化所有单元格
-            this.init();
+        watch:{
+            'field.msg':function (value) {
+                console.log(value.action);
+                switch (value.action) {
+                    case 'mergeCells':
+                        this.mergeCells();
+                        break;
+                }
+            },
         },
         methods:{
+            /**
+             * 合并单元格
+             */
+            mergeCells(){
+                //校验
+                if(this.selectedCells.length<=1){//必须多余1个
+                    return;
+                }
+                //do
+                this.doMergeCells();
+            },
+            doMergeCells(){
+                let firstCell=null;//第一个被选中的cell
+                let lastCell=null;//最后一个被删除的cell
+                //遍历所有单元格
+                this.field.cells.forEach(rowCells=>{
+                    let t=[];//待删除元素索引
+                    for(let i=0; i<rowCells.length;i++){//对于每一个cell
+                        let cell=rowCells[i];
+                        if(this.isSelected(cell)){//被选中
+                            if(firstCell==null){//第一个被选中的
+                                //标记
+                                firstCell=cell;
+                            }else{//其余的都删除
+                                t.push(i);
+                                lastCell=cell;
+                            }
+                        }
+                    }
+                    //删除
+                    rowCells.splice(t[0],t.length);
+                });
+                //比对, 修改firstCell
+                firstCell.width=lastCell.column-firstCell.column+1;
+                firstCell.height=lastCell.row-firstCell.row+1;
+                //取消选中状态
+                this.initDragStatus();
+            },
             init(){
                 let cells=[];
                 for(let i=0;i<this.field.row;i++){

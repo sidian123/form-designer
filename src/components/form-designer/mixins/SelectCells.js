@@ -60,5 +60,12 @@ export default {
             }
             return utils.isBetween(this.dragStart.row,this.dragEnd.row,cell.row) && utils.isBetween(this.dragStart.column,this.dragEnd.column,cell.column);
         },
+        /**
+         * 清空拖拽状态
+         */
+        initDragStatus(){
+            this.dragStart=null;
+            this.dragEnd=null;
+        },
     }
 }

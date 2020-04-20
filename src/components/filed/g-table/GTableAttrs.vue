@@ -2,7 +2,9 @@
     <div class="attrs">
         <div class="attr-item">
             <div class="attr-key"></div>
-            <div class="attr-value"><el-button size="mini">合并单元格</el-button></div>
+            <div class="attr-value">
+                <el-button size="mini" @click="mergeCells">合并单元格</el-button>
+            </div>
         </div>
     </div>
 </template>
@@ -10,7 +12,17 @@
 <script>
     export default {
         name: "GTableAttrs",
-        props:['field']
+        props:['field'],
+        methods:{
+            /**
+             * 合并单元格
+             */
+            mergeCells(){
+                this.field.msg={
+                    action:"mergeCells",//动作, 合并单元格
+                }
+            }
+        }
     }
 </script>
 

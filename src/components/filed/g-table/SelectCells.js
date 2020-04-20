@@ -20,6 +20,20 @@ export default {
             isDrag:false,
         }
     },
+    computed:{
+        /**
+         * 被选中的cells
+         */
+        selectedCells(){
+            let cells=[];
+            this.field.cells.forEach(rowCells=>rowCells.forEach(cell=>{
+                if(this.inRect(cell)){
+                    cells.push(cell);
+                }
+            }));
+            return cells;
+        }
+    },
     methods:{
         /**
          * 开始拖拽
@@ -50,6 +64,12 @@ export default {
             this.dragStart={row:item.row,column:item.column};
         },
         /**
+         * 是否被选中
+         */
+        isSelected(cell){
+            return this.selectedCells.findIndex(value => utils.posEqual(value,cell))!==-1;
+        },
+        /**
          * 在方形内. 方形由start,end确定
          * @param cell 单元格,必须有坐标{row,column}
          * @return {boolean}
@@ -59,6 +79,13 @@ export default {
                 return false;
             }
             return utils.isBetween(this.dragStart.row,this.dragEnd.row,cell.row) && utils.isBetween(this.dragStart.column,this.dragEnd.column,cell.column);
+        },
+        /**
+         * 清空拖拽状态
+         */
+        initDragStatus(){
+            this.dragStart=null;
+            this.dragEnd=null;
         },
     }
 }
