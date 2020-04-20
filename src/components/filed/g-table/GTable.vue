@@ -15,8 +15,12 @@
                     <td v-for="(cell,index) in row"
                         :key="index"
                         class="cell"
+                        :class="{isSelected:inRect(cell)}"
                         :colspan="cell.width"
                         :rowspan="cell.height"
+                        @mousedown="onCellMouseDown(cell)"
+                        @mousemove="onCellMouseMove(cell)"
+                        @mouseup="onCellMouseUp(cell)"
                     >
                     </td>
                 </tr>
@@ -27,9 +31,11 @@
 
 <script>
     import utils from "../../../assets/utils";
+    import SelectCells from "./SelectCells";
 
     export default {
         name: "GTable",
+        mixins:[SelectCells],
         props:['field'],
         computed:{
             /**
@@ -72,6 +78,9 @@
                 .cell{
                     height: 2rem;
                     border:solid 1px black;
+                    &.isSelected{
+                        background-color: #eff9ef;
+                    }
                 }
             }
         }

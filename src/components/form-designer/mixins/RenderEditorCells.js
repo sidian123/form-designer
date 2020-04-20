@@ -1,4 +1,3 @@
-import utils from "../../../assets/utils";
 import {formDesignerConfig} from "../../../assets/config";
 
 /**
@@ -73,7 +72,7 @@ export default {
             //更新isSelected字段
             let isSelected=false;
             if(this.dragStart!=null && this.dragEnd!=null){//处于拖拽或选中状态
-                if(utils.inRect(this.dragStart,this.dragEnd,cell)){//该单元格在拖拽范围内
+                if(this.inRect(cell)){//该单元格在拖拽范围内
                     isSelected=true;
                 }
             }
