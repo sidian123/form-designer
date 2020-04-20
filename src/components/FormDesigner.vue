@@ -92,7 +92,6 @@
 
 <script>
     import fieldsCom, {
-        buildCellField,
         checkboxGroupField,
         customField,
         dateTimePickerField,
@@ -110,11 +109,12 @@
     import Common from "./mixins/Common";
     import SelectCells from "./mixins/SelectCells";
     import DynaicColumnWidth from "./mixins/DynaicColumnWidth";
+    import FieldBuild from "./mixins/FieldBuild";
 
 
     export default {
         name: "FormDesigner",
-        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth],
+        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth,FieldBuild],
         components:fieldsCom,
         data(){
             return{
@@ -185,7 +185,7 @@
                 //获取拖拽的字段
                 let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
                 //构建单元格中的字段
-                let cellField=buildCellField(fieldObj,pos);
+                let cellField=this.buildCellField(fieldObj,pos);
                 //记录
                 let index = this.cellFields.findIndex(item=>this.posEqual(item.pos,pos));
                 if(index!==-1){//已存在
