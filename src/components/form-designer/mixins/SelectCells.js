@@ -12,6 +12,9 @@ export default {
              * 选择终点
              */
             dragEnd:null,
+            /**
+             * 是否处于拖拽状态
+             */
             isDrag:false,
         }
     },
@@ -33,7 +36,7 @@ export default {
         onCellMouseUp(item){
             //更新dragEnd状态
             this.dragEnd={row:item.row,column:item.column};
-            //退出拖拽状态
+            //退出拖拽状态,处于选中状态
             this.isDrag=false;
         },
         /**
