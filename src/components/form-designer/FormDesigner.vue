@@ -91,7 +91,7 @@
 </template>
 
 <script>
-    import fieldsCom, {fieldItems} from "./filed";
+    import fieldsCom, {fieldItems} from "../filed";
     import RenderEditorCells from "./mixins/RenderEditorCells";
     import MergeCells from "./mixins/MergeCells";
     import Common from "./mixins/Common";
@@ -195,7 +195,7 @@
     }
 </style>
 <style lang="scss" scoped>
-    @import "../assets/utils";
+    @import "src/assets/utils";
 
     .form-designer{
         display: flex;

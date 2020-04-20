@@ -1,5 +1,5 @@
-import utils from "../../assets/utils";
-import {formDesignerConfig} from "../../assets/config";
+import utils from "../../../assets/utils";
+import {formDesignerConfig} from "../../../assets/config";
 
 /**
  * 表单编辑器渲染相关的功能

@@ -5,7 +5,7 @@
 </template>
 
 <script>
-  import FormDesigner from "./components/FormDesigner";
+  import FormDesigner from "./components/form-designer/FormDesigner";
 
   export default {
   name: 'App',

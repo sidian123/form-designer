@@ -1,4 +1,4 @@
-import {formDesignerConfig} from "../../assets/config";
+import {formDesignerConfig} from "../../../assets/config";
 
 /**
  * 动态列宽相关的功能
