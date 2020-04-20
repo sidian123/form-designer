@@ -108,9 +108,6 @@
             return{
                 activeAttrsPanel:"cell",
                 isShowGrid:true,
-                dragStart:null,
-                dragEnd:null,
-                isDrag:false,
                 //所有的可用字段
                 fieldItems,
                 //单元格中的字段
@@ -156,34 +153,6 @@
                     //新增
                     this.cellFields.push(cellField);
                 }
-            },
-            /**
-             * 开始拖拽
-             * @param item
-             */
-            onCellMouseMove(item){
-                if(this.isDrag){//处于拖拽状态
-                    //更新dragEnd状态
-                    this.dragEnd={row:item.row,column:item.column};
-                }
-            },
-            /**
-             * 拖拽中
-             * @param item
-             */
-            onCellMouseUp(item){
-                //更新dragEnd状态
-                this.dragEnd={row:item.row,column:item.column};
-                //退出拖拽状态
-                this.isDrag=false;
-            },
-            /**
-             * 拖拽中
-             * @param item
-             */
-            onCellMouseDown(item){
-                this.isDrag=true;
-                this.dragStart={row:item.row,column:item.column};
             },
         }
     }
