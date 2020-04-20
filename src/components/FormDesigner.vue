@@ -272,7 +272,7 @@
                         }
                     }
                     .show-grid{
-                        border:dashed 1px gray;
+                        border:dashed 1px #e3e3e3;
                     }
                 }
                 .cell-attributes-panel{
