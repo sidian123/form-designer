@@ -2,12 +2,17 @@ import GLabel from "./GLabel";
 import GLabelAttrs from "./GLabelAttrs";
 import GInput from "./GInput";
 import GInputAttrs from "./GInputAttrs";
+import GTable from "./GTable";
+import GTableAttrs from "./GTableAttrs";
 
+//组件导出
 export default {
     [GLabel.name]:GLabel,
     [GLabelAttrs.name]:GLabelAttrs,
     [GInput.name]:GInput,
-    [GInputAttrs.name]:GInputAttrs
+    [GInputAttrs.name]:GInputAttrs,
+    [GTable.name]:GTable,
+    [GTableAttrs.name]:GTableAttrs,
 }
 
 const labelField={type:"label",name:"标签",value:"label"};
@@ -28,19 +33,36 @@ const tableField={
     type:"table",
     name:"表格布局",
     row:10,
-    column:8
+    column:8,
+    cells:[],//表格的所有单元格, 二维
 };
 
-export {
-    labelField,
-    inputField,
-    inputNumberFiled,
-    radioGroupField,
-    checkboxGroupField,
-    dateTimePickerField,
-    customField,
-    fileField,
-    lineField,
-    tabField,
-    tableField,
-}
+//所有字段导出
+export const fieldItems={
+    base:{
+        title:"基础字段",
+        list:[
+            labelField,
+            inputField,
+            inputNumberFiled,
+            radioGroupField,
+            checkboxGroupField,
+            dateTimePickerField,
+        ]
+    },
+    advanced:{
+        title:"高级字段",
+        list:[
+            customField,
+            fileField
+        ]
+    },
+    layout:{
+        title:"布局字段",
+        list:[
+            lineField,
+            tabField,
+            tableField
+        ]
+    }
+};

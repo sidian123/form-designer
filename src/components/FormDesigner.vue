@@ -91,19 +91,7 @@
 </template>
 
 <script>
-    import fieldsCom, {
-        checkboxGroupField,
-        customField,
-        dateTimePickerField,
-        fileField,
-        inputField,
-        inputNumberFiled,
-        labelField,
-        lineField,
-        radioGroupField,
-        tabField,
-        tableField
-    } from "./filed";
+    import fieldsCom, {fieldItems} from "./filed";
     import RenderEditorCells from "./mixins/RenderEditorCells";
     import MergeCells from "./mixins/MergeCells";
     import Common from "./mixins/Common";
@@ -124,34 +112,7 @@
                 dragEnd:null,
                 isDrag:false,
                 //所有的可用字段
-                fieldItems:{
-                    base:{
-                        title:"基础字段",
-                        list:[
-                            labelField,
-                            inputField,
-                            inputNumberFiled,
-                            radioGroupField,
-                            checkboxGroupField,
-                            dateTimePickerField,
-                        ]
-                    },
-                    advanced:{
-                        title:"高级字段",
-                        list:[
-                            customField,
-                            fileField
-                        ]
-                    },
-                    layout:{
-                        title:"布局字段",
-                        list:[
-                            lineField,
-                            tabField,
-                            tableField
-                        ]
-                    }
-                },
+                fieldItems,
                 //单元格中的字段
                 cellFields:[],
             }

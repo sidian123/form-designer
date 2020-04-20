@@ -13,6 +13,7 @@ export default {
             switch (fieldObj.type) {
                 case "label":
                 case "input":
+                case "table":
                     return {...fieldObj, pos};
                 default:
                     return {pos};
