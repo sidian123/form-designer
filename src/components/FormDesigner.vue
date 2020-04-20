@@ -20,8 +20,6 @@
         </div>
         <div class="designer-body">
             <div class="tool-bar">
-                行<el-input-number size="mini" :min="0" v-model="rowNum"></el-input-number>
-                列<el-input-number size="mini" :min="0" v-model="columnNum"></el-input-number>
                 <el-button size="mini" @click="switchGridLine">显/隐网格</el-button>
                 <el-button size="mini" @click="mergeCells" :disabled="!canMergeCells">单元格合并</el-button>
             </div>
@@ -32,9 +30,9 @@
                          :key="index"
                     >
                         <div class="cell"
-                             :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
-                             :style="{width:(item.width/columnNum)*100+'%'}"
                              v-for="(item,index) in row"
+                             :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
+                             :style="{width:getCellWidth(item)+'%'}"
                              :key="index"
                              :id="`${item.row},${item.column}`"
                              @mousedown="onCellMouseDown(item)"
@@ -51,13 +49,41 @@
                         </div>
                     </div>
                 </div>
-                <div class="cell-attributes-panel">
-                    <div class="panel-title">字段属性</div>
-                    <component
-                            v-if="selectedCells.length>0 && selectedCells[0].field!=null"
-                            :is="'g-'+selectedCells[0].field.type+'-attrs'"
-                            :field.sync="selectedCells[0].field"
-                    ></component>
+                <div class="attributes-panel">
+                    <el-tabs v-model="activeAttrsPanel">
+                        <el-tab-pane label="字段属性" name="cell">
+                            <component
+                                    v-if="selectedCells.length>0 && selectedCells[0].field!=null"
+                                    :is="'g-'+selectedCells[0].field.type+'-attrs'"
+                                    :field.sync="selectedCells[0].field"
+                            ></component>
+                        </el-tab-pane>
+                        <el-tab-pane label="设计器属性" name="designer" class="designer-attrs-panel">
+                            <div class="attr-item">
+                                <div class="attr-key">行</div>
+                                <div class="attr-value">
+                                    <el-input-number size="mini" :min="0" v-model="rowNum"></el-input-number>
+                                </div>
+                            </div>
+                            <div class="attr-item">
+                                <div class="attr-key">列</div>
+                                <div class="attr-value">
+                                    <el-input-number size="mini" :min="0" v-model="columnNum"></el-input-number>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="attr-item" v-for="(item,index) in columnWidths" :key="index">
+                                <div class="attr-key">{{`第${index+1}列`}}</div>
+                                <div class="attr-value">
+                                    <el-input-number size="mini"
+                                                     :min="0"
+                                                     v-model="columnWidthsReactive[index]"
+                                                     @change="onColumnWidthChange"
+                                    ></el-input-number>
+                                </div>
+                            </div>
+                        </el-tab-pane>
+                    </el-tabs>
                 </div>
             </div>
         </div>
@@ -82,14 +108,16 @@
     import MergeCells from "./mixins/MergeCells";
     import Common from "./mixins/Common";
     import SelectCells from "./mixins/SelectCells";
+    import DynaicColumnWidth from "./mixins/DynaicColumnWidth";
 
 
     export default {
         name: "FormDesigner",
-        mixins:[RenderEditorCells,MergeCells,Common,SelectCells],
+        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth],
         components:fieldsCom,
         data(){
             return{
+                activeAttrsPanel:"cell",
                 isShowGrid:true,
                 dragStart:null,
                 dragEnd:null,
@@ -272,16 +300,31 @@
                         }
                     }
                     .show-grid{
-                        border:dashed 1px #e3e3e3;
+                        border:solid 1px #f2f2f2;
                     }
                 }
-                .cell-attributes-panel{
+                .attributes-panel{
                     flex-shrink: 0;
                     flex-basis: 250px;
                     border-left: solid 1px gray;
-                    .panel-title{
-                        border-bottom: solid 1px gray;
-                        padding:0.5rem 0.5rem;
+                    padding: 0 0.2rem;
+
+                    .designer-attrs-panel{
+                        .attr-item{
+                            display: flex;
+                            align-items: center;
+                            margin:1rem 0;
+                            padding: 0 1rem;
+
+                            .attr-key{
+                                flex-basis: 6rem;
+                                flex-shrink: 0;
+                                padding-right: 2rem;
+                            }
+                            .attr-value{
+                                flex-grow: 1;
+                            }
+                        }
                     }
                 }
             }

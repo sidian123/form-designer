@@ -1,4 +1,5 @@
 import utils from "../../assets/utils";
+import {formDesignerConfig} from "../../assets/config";
 
 /**
  * 表单编辑器渲染相关的功能
@@ -9,11 +10,11 @@ export default {
             /**
              * 表单的列数
              */
-            columnNum:4,
+            columnNum:formDesignerConfig.columnNum,
             /**
              * 表单的行数
              */
-            rowNum:5,
+            rowNum:formDesignerConfig.rowNum,
             /**
              * 被特殊处理过的单元格, 如合并后的单元格
              */

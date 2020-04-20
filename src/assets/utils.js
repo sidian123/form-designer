@@ -23,5 +23,17 @@ export default {
      */
     inRect(start,end,pos){
         return this.isBetween(start.row,end.row,pos.row) && this.isBetween(start.column,end.column,pos.column);
+    },
+    /**
+     * 填充数据
+     * @param time 填充次数
+     * @param value 填充的值
+     */
+    fillArray(time,value){
+        let array=[];
+        for(let i=0;i<time;i++){
+            array.push(value);
+        }
+        return array;
     }
 }
