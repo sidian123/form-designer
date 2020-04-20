@@ -31,7 +31,7 @@
                     >
                         <div class="cell"
                              v-for="(item,index) in row"
-                             :class="{isSelected:item.isSelected,'show-grid':isShowGrid}"
+                             :class="{isSelected:item.isSelected && item.field==null,'show-grid':isShowGrid}"
                              :style="{width:getCellWidth(item)+'%'}"
                              :key="index"
                              :id="`${item.row},${item.column}`"
@@ -253,10 +253,6 @@
                             display: flex;
                             align-items: center;
                             padding: 0 0.5rem;
-                            &:hover{
-                                background-color: #c8c8c8;
-                                color: white;
-                            }
                             &.isSelected{
                                 background-color: #eff9ef;
                             }
