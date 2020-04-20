@@ -26,7 +26,7 @@
 </template>
 
 <script>
-    import utils from "../../assets/utils";
+    import utils from "../../../assets/utils";
 
     export default {
         name: "GTable",

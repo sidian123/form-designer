@@ -1,9 +1,9 @@
-import GLabel from "./GLabel";
-import GLabelAttrs from "./GLabelAttrs";
-import GInput from "./GInput";
-import GInputAttrs from "./GInputAttrs";
-import GTable from "./GTable";
-import GTableAttrs from "./GTableAttrs";
+import GLabel from "./g-lable/GLabel";
+import GLabelAttrs from "./g-lable/GLabelAttrs";
+import GInput from "./g-input/GInput";
+import GInputAttrs from "./g-input/GInputAttrs";
+import GTable from "./g-table/GTable";
+import GTableAttrs from "./g-table/GTableAttrs";
 
 //组件导出
 export default {
