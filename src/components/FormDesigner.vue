@@ -102,7 +102,8 @@
         labelField,
         lineField,
         radioGroupField,
-        tabField
+        tabField,
+        tableField
     } from "./filed";
     import RenderEditorCells from "./mixins/RenderEditorCells";
     import MergeCells from "./mixins/MergeCells";
@@ -146,7 +147,8 @@
                         title:"布局字段",
                         list:[
                             lineField,
-                            tabField
+                            tabField,
+                            tableField
                         ]
                     }
                 },

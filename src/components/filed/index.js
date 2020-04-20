@@ -24,6 +24,21 @@ const customField={type:"custom",name:"自定义区域"};
 const fileField={type:"file",name:"文件"};
 const lineField={type:"line",name:"分割线"};
 const tabField={type:"tab",name:"标签页"};
+const tableField={type:"table",name:"表格布局"};
+
+export {
+    labelField,
+    inputField,
+    inputNumberFiled,
+    radioGroupField,
+    checkboxGroupField,
+    dateTimePickerField,
+    customField,
+    fileField,
+    lineField,
+    tabField,
+    tableField,
+}
 
 /**
  * 根据字段对象, 构建单元格中的字段
@@ -42,15 +57,5 @@ function buildCellField(fieldObj,pos){
 }
 
 export {
-    labelField,
-    inputField,
-    inputNumberFiled,
-    radioGroupField,
-    checkboxGroupField,
-    dateTimePickerField,
-    customField,
-    fileField,
-    lineField,
-    tabField,
     buildCellField
 }
