@@ -12,5 +12,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .label{
+        padding: 0 0.5rem;
+    }
 </style>

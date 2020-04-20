@@ -1,8 +1,7 @@
 <template>
-    <el-input size="mini"
-              :type="field.inputType"
-              placeholder="请输入内容"
-    ></el-input>
+    <div class="input">
+        <el-input :type="field.inputType" placeholder="请输入内容"></el-input>
+    </div>
 </template>
 
 <script>
@@ -13,5 +12,7 @@
 </script>
 
 <style lang="scss" scoped>
-
+    .input{
+        padding: 0 0.5rem;
+    }
 </style>

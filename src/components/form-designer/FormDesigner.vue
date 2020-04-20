@@ -221,7 +221,9 @@
                             min-height: 2rem;
                             display: flex;
                             align-items: center;
-                            padding: 0 0.5rem;
+                            *{
+                                width:100%
+                            }
                             &.isSelected{
                                 background-color: #eff9ef;
                             }
