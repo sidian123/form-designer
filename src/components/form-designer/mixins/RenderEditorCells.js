@@ -1,4 +1,5 @@
 import {formDesignerConfig} from "../../../assets/config";
+import utils from "../../../assets/utils";
 
 /**
  * 表单编辑器渲染相关的功能
@@ -68,7 +69,7 @@ export default {
          */
         fillCell(cell,isSpecial){
             //更新字段信息
-            cell.field=this.cellFields.find(item=>this.posEqual(item.pos,cell));
+            cell.field=this.cellFields.find(item=>utils.posEqual(item.pos,cell));
             //更新isSelected字段
             let isSelected=false;
             if(this.dragStart!=null && this.dragEnd!=null){//处于拖拽或选中状态

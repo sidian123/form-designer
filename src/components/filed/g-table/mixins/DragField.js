@@ -1,5 +1,3 @@
-import utils from "../../../assets/utils";
-
 /**
  * 与拖拽字段相关的功能
  */
@@ -19,17 +17,8 @@ export default {
         onCellDrop(cell,event){
             //获取拖拽的字段
             let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
-            //构建单元格中的字段
-            let cellField=this.buildCellField(fieldObj,{row:cell.row,column:cell.column});
-            //记录
-            let index = this.cellFields.findIndex(item=>utils.posEqual(item.pos,cell));
-            if(index!==-1){//已存在
-                //更新
-                this.cellFields.splice(index,1,cellField);
-            }else{//不存在
-                //新增
-                this.cellFields.push(cellField);
-            }
+            //构建单元格中的字段, 并记录
+            cell.field=this.buildCellField(fieldObj, {row: cell.row, column: cell.column});
         },
         /**
          * 拖拽中

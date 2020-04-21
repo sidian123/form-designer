@@ -21,7 +21,14 @@
                         @mousedown="onCellMouseDown(cell)"
                         @mousemove="onCellMouseMove(cell)"
                         @mouseup="onCellMouseUp(cell)"
+                        @drop.prevent="onCellDrop(cell,$event)"
+                        @dragover.prevent="onCellDragOver"
                     >
+                        <component
+                                v-if="cell.field!=null"
+                                :is="'g-'+cell.field.type"
+                                :field="cell.field"
+                        ></component>
                     </td>
                 </tr>
             </tbody>
@@ -34,10 +41,11 @@
     import SelectCells from "./mixins/SelectCells";
     import MergeCells from "./mixins/MergeCells";
     import ChangeSize from "./mixins/ChangeSize";
+    import DragField from "./mixins/DragField";
 
     export default {
         name: "GTable",
-        mixins:[SelectCells,MergeCells,ChangeSize],
+        mixins:[SelectCells,MergeCells,ChangeSize,DragField],
         props:['field'],
         created() {
             //初始化所有单元格
@@ -58,7 +66,6 @@
              * @param value
              */
             'field.msg':function (value) {
-                console.log(value.action);
                 switch (value.action) {
                     case 'mergeCells':
                         this.mergeCells();

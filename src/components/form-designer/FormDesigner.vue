@@ -97,13 +97,12 @@
     import Common from "./mixins/Common";
     import SelectCells from "./mixins/SelectCells";
     import DynaicColumnWidth from "./mixins/DynaicColumnWidth";
-    import FieldBuild from "./mixins/FieldBuild";
     import DragField from "./mixins/DragField";
 
 
     export default {
         name: "FormDesigner",
-        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth,FieldBuild,DragField],
+        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth,DragField],
         components:fieldsCom,
         data(){
             return{
@@ -111,8 +110,6 @@
                 isShowGrid:true,
                 //所有的可用字段
                 fieldItems,
-                //单元格中的字段
-                cellFields:[],
             }
         },
         computed:{
