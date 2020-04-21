@@ -39,13 +39,42 @@ export default {
          * 是否为方形选择区域
          */
         isRectSelection(){
-            //获取极值
-            let extremum=this.getExtremum();
-            //开始判断
-            let firstCell=this.selectedCells[0];
-            let lastCell=this.selectedCells[this.selectedCells.length-1];
-            return firstCell.row === extremum.minRow && firstCell.column === extremum.minCol && //第一个Cell必须与极小值对应
-                lastCell.row+lastCell.height-1 === extremum.maxRow && lastCell.column+lastCell.width-1 === extremum.maxCol; //最后一个cell必须拥有极大值
+            //参数校验
+            if(this.selectedCells.length===0){//无元素
+                return false;
+            }
+            if(this.selectedCells.length===1){//只有一个元素
+                return true;
+            }
+            //遍历
+            let widths=[];//每行宽度的集合
+            let rowNum=this.selectedCells[0].row;//当前行索引
+            let index=0;//集合索引
+            for(let i=0;i<this.selectedCells.length;i++){
+                let cell=this.selectedCells[i];
+                if(rowNum!==cell.row){//下一行了
+                    rowNum=cell.row;
+                    index+=this.selectedCells[i-1].height;
+                }
+                //同行累加宽度
+                for(let j=0;j<cell.height;j++){
+                    if(widths[index+j]==null){//初始化
+                        widths[index+j]=0;
+                    }
+                    widths[index+j]+=cell.width;
+                }
+            }
+            //每一行宽度都相等才是方形
+            let firstWidth=widths[0];
+            for(let width of widths){
+                if(width===0){//肯定到最后一行了.
+                    break;
+                }
+                if(firstWidth!==width){
+                    return false;
+                }
+            }
+            return true;
         },
         /**
          * 获取极值

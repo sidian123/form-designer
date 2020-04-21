@@ -33,10 +33,11 @@
     import utils from "../../../assets/utils";
     import SelectCells from "./SelectCells";
     import MergeCells from "./MergeCells";
+    import ChangeSize from "./ChangeSize";
 
     export default {
         name: "GTable",
-        mixins:[SelectCells,MergeCells],
+        mixins:[SelectCells,MergeCells,ChangeSize],
         props:['field'],
         created() {
             //初始化所有单元格

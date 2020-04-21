@@ -6,6 +6,18 @@
                 <el-button size="mini" @click="mergeCells">合并单元格</el-button>
             </div>
         </div>
+        <div class="attr-item">
+            <div class="attr-key">列数</div>
+            <div class="attr-value">
+                <el-input-number size="mini" :min="1" v-model="field.column"></el-input-number>
+            </div>
+        </div>
+        <div class="attr-item">
+            <div class="attr-key">行数</div>
+            <div class="attr-value">
+                <el-input-number size="mini" :min="1" v-model="field.row"></el-input-number>
+            </div>
+        </div>
     </div>
 </template>
 
