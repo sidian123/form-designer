@@ -36,6 +36,47 @@ export default {
     },
     methods:{
         /**
+         * 是否为方形选择区域
+         */
+        isRectSelection(){
+            //获取极值
+            let extremum=this.getExtremum();
+            //开始判断
+            let firstCell=this.selectedCells[0];
+            let lastCell=this.selectedCells[this.selectedCells.length-1];
+            return firstCell.row === extremum.minRow && firstCell.column === extremum.minCol && //第一个Cell必须与极小值对应
+                lastCell.row+lastCell.height-1 === extremum.maxRow && lastCell.column+lastCell.width-1 === extremum.maxCol; //最后一个cell必须拥有极大值
+        },
+        /**
+         * 获取极值
+         */
+        getExtremum(){
+            //记录极值的变量
+            let extre={
+                minCol:Number.MAX_VALUE,
+                maxCol:0,
+                minRow:Number.MAX_VALUE,
+                maxRow:0
+            };
+            //遍历
+            this.selectedCells.forEach(cell=>{
+                //更新极值
+                if(cell.row <= extre.minRow){
+                    extre.minRow=cell.row;
+                }
+                if(cell.column <= extre.minCol){
+                    extre.minCol=cell.column;
+                }
+                if(cell.row+cell.height-1 >= extre.maxRow){
+                    extre.maxRow=cell.row+cell.height-1;
+                }
+                if(cell.column+cell.width-1 >= extre.maxCol){
+                    extre.maxCol=cell.column+cell.width-1;
+                }
+            });
+            return extre;
+        },
+        /**
          * 开始拖拽
          * @param item
          */
