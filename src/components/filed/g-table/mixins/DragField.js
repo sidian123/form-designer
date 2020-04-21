@@ -2,12 +2,6 @@
  * 与拖拽字段相关的功能
  */
 export default {
-    data(){
-        return{
-            //单元格中的字段
-            cellFields:[],
-        }
-    },
     methods:{
         /**
          * 拖拽到
@@ -18,7 +12,7 @@ export default {
             //获取拖拽的字段
             let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
             //构建单元格中的字段, 并记录
-            cell.field=this.buildCellField(fieldObj, {row: cell.row, column: cell.column});
+            this.$set(cell,"field",this.buildCellField(fieldObj, {row: cell.row, column: cell.column}));
         },
         /**
          * 拖拽中

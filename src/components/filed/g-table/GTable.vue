@@ -21,8 +21,8 @@
                         @mousedown="onCellMouseDown(cell)"
                         @mousemove="onCellMouseMove(cell)"
                         @mouseup="onCellMouseUp(cell)"
-                        @drop.prevent="onCellDrop(cell,$event)"
-                        @dragover.prevent="onCellDragOver"
+                        @drop.prevent.stop="onCellDrop(cell,$event)"
+                        @dragover.prevent.stop="onCellDragOver"
                     >
                         <component
                                 v-if="cell.field!=null"
@@ -42,10 +42,13 @@
     import MergeCells from "./mixins/MergeCells";
     import ChangeSize from "./mixins/ChangeSize";
     import DragField from "./mixins/DragField";
+    import GLabel from "../g-lable/GLabel";
+    import GInput from "../g-input/GInput";
 
     export default {
         name: "GTable",
         mixins:[SelectCells,MergeCells,ChangeSize,DragField],
+        components:{GLabel,GInput},
         props:['field'],
         created() {
             //初始化所有单元格
