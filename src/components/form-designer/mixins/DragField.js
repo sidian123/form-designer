@@ -1,3 +1,5 @@
+import utils from "../../../assets/utils";
+
 export default {
     methods:{
         /**
@@ -12,7 +14,7 @@ export default {
             //构建单元格中的字段
             let cellField=this.buildCellField(fieldObj,pos);
             //记录
-            let index = this.cellFields.findIndex(item=>this.posEqual(item.pos,pos));
+            let index = this.cellFields.findIndex(item=>utils.posEqual(item.pos,pos));
             if(index!==-1){//已存在
                 //更新
                 this.cellFields.splice(index,1,cellField);
