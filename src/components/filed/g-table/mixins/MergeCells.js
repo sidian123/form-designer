@@ -1,4 +1,4 @@
-import utils from "../../../assets/utils";
+import utils from "../../../../assets/utils";
 
 export default {
     methods:{

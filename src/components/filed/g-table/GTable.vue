@@ -31,9 +31,9 @@
 
 <script>
     import utils from "../../../assets/utils";
-    import SelectCells from "./SelectCells";
-    import MergeCells from "./MergeCells";
-    import ChangeSize from "./ChangeSize";
+    import SelectCells from "./mixins/SelectCells";
+    import MergeCells from "./mixins/MergeCells";
+    import ChangeSize from "./mixins/ChangeSize";
 
     export default {
         name: "GTable",

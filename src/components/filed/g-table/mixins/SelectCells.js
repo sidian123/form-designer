@@ -1,7 +1,7 @@
 /**
  * 和选中相关的功能
  */
-import utils from "../../../assets/utils";
+import utils from "../../../../assets/utils";
 
 export default {
     data(){
