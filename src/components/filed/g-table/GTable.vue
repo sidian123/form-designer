@@ -15,7 +15,7 @@
                     <td v-for="(cell,index) in row"
                         :key="index"
                         class="cell"
-                        :class="{isSelected:isSelected(cell)}"
+                        :class="{isSelected:isSelected(cell) && cell.field==null}"
                         :colspan="cell.width"
                         :rowspan="cell.height"
                         @mousedown="onCellMouseDown(cell)"
@@ -104,6 +104,10 @@
                 .cell{
                     height: 2rem;
                     border:solid 1px black;
+                    *{
+                        width: 100%;
+                    }
+
                     &.isSelected{
                         background-color: #eff9ef;
                     }
