@@ -98,11 +98,12 @@
     import SelectCells from "./mixins/SelectCells";
     import DynaicColumnWidth from "./mixins/DynaicColumnWidth";
     import FieldBuild from "./mixins/FieldBuild";
+    import DragField from "./mixins/DragField";
 
 
     export default {
         name: "FormDesigner",
-        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth,FieldBuild],
+        mixins:[RenderEditorCells,MergeCells,Common,SelectCells,DynaicColumnWidth,FieldBuild,DragField],
         components:fieldsCom,
         data(){
             return{
@@ -132,27 +133,8 @@
             switchGridLine(){
                 this.isShowGrid=!this.isShowGrid;
             },
-            onCellDragOver(event){
-                event.dataTransfer.dropEffect = "copy";
-            },
             onFieldDragStart(item,event){
                 event.dataTransfer.setData("text/json",JSON.stringify(item));
-            },
-            onCellDrop(item,event){
-                let pos = {row:item.row,column:item.column};
-                //获取拖拽的字段
-                let fieldObj=JSON.parse(event.dataTransfer.getData("text/json"));
-                //构建单元格中的字段
-                let cellField=this.buildCellField(fieldObj,pos);
-                //记录
-                let index = this.cellFields.findIndex(item=>this.posEqual(item.pos,pos));
-                if(index!==-1){//已存在
-                    //更新
-                    this.cellFields.splice(index,1,cellField);
-                }else{//不存在
-                    //新增
-                    this.cellFields.push(cellField);
-                }
             },
         }
     }

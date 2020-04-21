@@ -94,7 +94,9 @@
       //宽度
       width:1,
       //高度
-      height:1
+      height:1,
+      //字段
+      field:{...}
   }
   ```
 
