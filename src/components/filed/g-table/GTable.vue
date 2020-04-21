@@ -53,6 +53,10 @@
             },
         },
         watch:{
+            /**
+             * 接收并处理来自属性面板的消息处理器
+             * @param value
+             */
             'field.msg':function (value) {
                 console.log(value.action);
                 switch (value.action) {
