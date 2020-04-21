@@ -86,6 +86,7 @@
             width: 100%;
             border-collapse: collapse;
             .row{
+                height: 2rem;
                 .cell{
                     height: 2rem;
                     border:solid 1px black;
